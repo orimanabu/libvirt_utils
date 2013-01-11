@@ -8,7 +8,7 @@ You can clone your VM image by
   1. copy image file and XML definition file, and
   2. run kvm_image_adjuster.py to modify IP address, hostname, etc.
 
-If you are going to set the following parameters to test.img and test.xml:
+For example, if you are going to set the following parameters to "test.img" and "test.xml":
 
 <dl>
   <dt>eth0</dt>
@@ -38,10 +38,16 @@ Run this script like this:
 
 Additionally, if you get the copied VM image to work for serial console (with "virsh console"), use "--serial-console" option.
 
-* Tested Hypervisor: RHEL6 KVM
-* Tested Guest OS: RHEL 6.3, Ubuntu 12.04
-
 Notes:
 
 If you use RHEL6 KVM and Ubuntu VM, first copy augeas_lenses/interfaces.aug to /usr/share/augeas/lenses/dist/.
-This script uses libguestfs and libaugeas to manipulate several /etc files, but libaugeas in RHEL6 is too old to play with /etc/network/interfaces for Ubuntu.
+Augeas_lenses/interfaces.aug is a libaugeas lense file for /etc/network/interfaces of Ubuntu.
+Kvm_image_adjuster.py uses libguestfs and libaugeas to manipulate several /etc files, but libaugeas in RHEL6 is too old to play with /etc/network/interfaces for Ubuntu.
+
+Tested Environments:
+* Hypervisors: RHEL6 KVM
+* Guest OSes: RHEL 6.3, Ubuntu 12.04
+
+Prerequisites:
+* Packages: python-libguestfs
+
