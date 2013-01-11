@@ -36,3 +36,12 @@ Run this script like this:
 --domain=dept.example.com,example.com
 </pre>
 
+Additionally, if you get the copied VM image to work for serial console (with "virsh console"), use "--serial-console" option.
+
+* Tested Hypervisor: RHEL6 KVM
+* Tested Guest OS: RHEL 6.3, Ubuntu 12.04
+
+Notes:
+
+If you use RHEL6 KVM and Ubuntu VM, first copy augeas_lenses/interfaces.aug to /usr/share/augeas/lenses/dist/.
+This script uses libguestfs and libaugeas to manipulate several /etc files, but libaugeas in RHEL6 is too old to play with /etc/network/interfaces for Ubuntu.
