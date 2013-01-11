@@ -36,7 +36,7 @@ Run this script like this:
 --domain=dept.example.com,example.com
 </pre>
 
-Additionally, if you get the copied VM image to work for serial console (with "virsh console"), use "--serial-console" option.
+Additionally, if you get the copied VM image to output with serial console (for "virsh console"), use "--serial-console" option.
 
 Notes:
 
