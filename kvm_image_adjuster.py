@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # vi: set et sts=4 sw=4 ts=4 :
 
-# E.g.
+# usage:
 # ./kvm_image_adjuster.py --image=./test.img --xml=./test.xml --interface=eth0/auto/1.0.0.1/255.255.255.255,eth1/auto/dhcp/dhcp,eth2/auto/1.1.1.1/255.255.0.0 --hostname=vm.iscoc.ibm.mgmt --nameserver=8.8.8.8,11.11.11.11 --domain=ibm.com,iscoc.ibm.com --primary=eth0 --gateway=10.0.0.1 --serial-console
 
 import re
