@@ -324,18 +324,20 @@ def rhel_adjust_resolvconf(g, nameservers, domains):
         print "  %s exists, deleting existing entries..." % path
         g.aug_rm(augpath + "/nameserver")
         g.aug_rm(augpath + "/search")
-    for ns in nameservers:
-        if not g.aug_match(augpath + "/nameserver"):
-            g.aug_set(augpath + "/nameserver", ns)
-        else:
-            g.aug_insert(augpath + "/nameserver[last()]", "nameserver", 0)
-            g.aug_set(augpath + "/nameserver[last()]", ns)
-    for dom in domains:
-        if not g.aug_match(augpath + "/search"):
-            g.aug_set(augpath + "/search/domain", dom)
-        else:
-            g.aug_insert(augpath + "/search/domain[last()]", "domain", 0)
-            g.aug_set(augpath + "/search/domain[last()]", dom)
+    if nameservers:
+        for ns in nameservers:
+            if not g.aug_match(augpath + "/nameserver"):
+                g.aug_set(augpath + "/nameserver", ns)
+            else:
+                g.aug_insert(augpath + "/nameserver[last()]", "nameserver", 0)
+                g.aug_set(augpath + "/nameserver[last()]", ns)
+    if domains:
+        for dom in domains:
+            if not g.aug_match(augpath + "/search"):
+                g.aug_set(augpath + "/search/domain", dom)
+            else:
+                g.aug_insert(augpath + "/search/domain[last()]", "domain", 0)
+                g.aug_set(augpath + "/search/domain[last()]", dom)
     g.aug_save()
 
 def rhel_adjust_ifaces(g, defined_macs, new_ifaces, new_macs, nameservers, domains, primary, gateway):
@@ -357,8 +359,8 @@ def rhel_adjust_ifaces(g, defined_macs, new_ifaces, new_macs, nameservers, domai
                                    netmask    = new_iface['netmask'] if new_iface['ipaddr'] != "dhcp" else None,
                                    primary    = is_primary,
                                    gateway    = gateway if is_primary else None,
-                                   nameserver = nameservers if is_primary else None,
-                                   domain     = domains if is_primary else None)
+                                   nameserver = nameservers if nameservers and is_primary else None,
+                                   domain     = domains if domains and is_primary else None)
         ifcfgs[ifname].info()
         ifcfgs[ifname].commit_update()
 
@@ -584,14 +586,14 @@ if __name__ == '__main__':
 
     g = guestfs_open(options.imgpath)
     if options.debug: guestfs_print_misc(g)
+    OS = gflags['os']
 
     if options.interface:
         defined_macs = get_all_macs_from_xml(options.xmlpath)
         new_ifaces = parse_interface_option(options.interface)
         new_macs = generate_new_macs(defined_macs, new_ifaces)
-        nameservers = options.nameserver.split(",")
-        domains = options.domain.split(",")
-        OS = gflags['os']
+        nameservers = options.nameserver.split(",") if options.nameserver else None
+        domains = options.domain.split(",") if options.domain else None
 
         print "=> adjust interfaces (img)"
         adjuster(OS, 'adjust_ifaces')(g, defined_macs, new_ifaces, new_macs,
